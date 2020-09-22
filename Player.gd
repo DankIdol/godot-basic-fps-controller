@@ -3,7 +3,7 @@ extends KinematicBody
 var speed = 7
 var acceleration = 10
 var gravity = 0.09
-var jump = 10
+var jump = 3
 
 var mouse_sensitivity = 0.03
 
@@ -17,16 +17,13 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 func _input(event):
-	
 	if event is InputEventMouseMotion:
 		rotate_y(deg2rad(-event.relative.x * mouse_sensitivity)) 
 		head.rotate_x(deg2rad(-event.relative.y * mouse_sensitivity)) 
 		head.rotation.x = clamp(head.rotation.x, deg2rad(-90), deg2rad(90))
 
 func _physics_process(delta):
-	
 	direction = Vector3()
-	
 	move_and_slide(fall, Vector3.UP)
 	
 	if not is_on_floor():
@@ -34,24 +31,14 @@ func _physics_process(delta):
 		
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		fall.y = jump
-		
-	
-	if Input.is_action_pressed("move_forward"):
-	
+	if Input.is_action_pressed("w"):
 		direction -= transform.basis.z
-	
-	elif Input.is_action_pressed("move_backward"):
-		
+	elif Input.is_action_pressed("s"):
 		direction += transform.basis.z
-		
-	if Input.is_action_pressed("move_left"):
-		
+	if Input.is_action_pressed("a"):
 		direction -= transform.basis.x			
-		
-	elif Input.is_action_pressed("move_right"):
-		
+	elif Input.is_action_pressed("d"):
 		direction += transform.basis.x
-			
 		
 	direction = direction.normalized()
 	velocity = velocity.linear_interpolate(direction * speed, acceleration * delta) 
